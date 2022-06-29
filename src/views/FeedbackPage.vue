@@ -1,118 +1,132 @@
 <template>
-  <div class="container">
-    <v-card class="my-5">
-      <v-col align="center" justify="center">
-        <v-card-title class="mx-auto text-h2" primary-title>
-          Feedback
-        </v-card-title>
+  <div>
+    <div v-if="loading">
+      <page-loading />
+    </div>
+    <transition>
+      <div v-if="!loading" class="container">
+        <v-card class="my-5">
+          <v-col align="center" justify="center">
+            <v-card-title class="mx-auto text-h2" primary-title>
+              Feedback
+            </v-card-title>
 
-        <v-chip-group
-          active-class=" white--text text--aceent-4"
-          column
-          class="chipGroups"
-        >
-          <v-chip
-            color="#00E676"
-            v-for="(i, index) in selectNota"
-            :key="index"
-            @click="btn(index, i.nota)"
-            class="mx-auto chipItem"
-          >
-            {{ i.nota }}
-          </v-chip>
-        </v-chip-group>
+            <v-chip-group
+              active-class=" white--text text--aceent-4"
+              column
+              class="chipGroups"
+            >
+              <v-chip
+                color="#00E676"
+                v-for="(i, index) in selectNota"
+                :key="index"
+                @click="btn(index, i.nota)"
+                class="mx-auto chipItem"
+              >
+                {{ i.nota }}
+              </v-chip>
+            </v-chip-group>
 
-        <v-row align="center" justify="center" class="my-5">
-          <v-text-field
-            filled
-            rounded
-            dense
-            class="coment mt-6"
-            name="name"
-            label="Deixe seu comentario"
-            id="comment"
-            v-model="comment"
-          ></v-text-field>
-          <v-btn
-            :disabled="isActive"
-            class="my-auto sendBtn"
-            color="#00E676"
-            plain
-            @click="post"
-            ><v-icon>mdi-send</v-icon></v-btn
-          >
-        </v-row>
-      </v-col>
-    </v-card>
-
-    <v-row class="my-5">
-      <v-col v-for="(item, i) in comentarios" :key="i" md="6">
-        <v-card>
-          <v-list class="d-flex">
-            <v-card-text class="text-h5">
-              Nota:
-              <span class="green--text text--accent-3">{{ item.nota }}</span>
-            </v-card-text>
-            <v-btn rounded plain class="pa-0" @click="deleteComment(i)">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-
-            <v-dialog v-model="dialog" width="500">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn rounded plain class="pa-0" v-bind="attrs" v-on="on">
-                  <v-icon>mdi-tooltip-edit</v-icon>
-                </v-btn>
-              </template>
-
-              <v-card>
-                <v-card-title class="text-h5 grey lighten-2">
-                  Edit Comment
-                </v-card-title>
-
-                <v-chip-group
-                  active-class=" white--text text--aceent-4"
-                  column
-                  class="chipGroups"
-                >
-                  <v-chip
-                    color="#00E676"
-                    v-for="(i, index) in selectNota"
-                    :key="index"
-                    @click="btn(index, i.nota)"
-                    class="mx-auto pa-20"
-                  >
-                    {{ i.nota }}
-                  </v-chip>
-                </v-chip-group>
-
-                <v-text-field
-                  filled
-                  rounded
-                  dense
-                  class="newNota my-5 mx-auto"
-                  label="New Comment"
-                  id="id"
-                  v-model="newComment"
-                ></v-text-field>
-                {{ newComment }}
-
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn @click="editComment(i)" color="primary" text>
-                    I accept
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-list>
-          <v-card-text class="text-h4 green--text text--accent-3 comentario">
-            {{ item.comentario }}
-          </v-card-text>
+            <v-row align="center" justify="center" class="my-5">
+              <v-text-field
+                filled
+                rounded
+                dense
+                class="coment mt-6"
+                name="name"
+                label="Deixe seu comentario"
+                id="comment"
+                v-model="comment"
+              ></v-text-field>
+              <v-btn
+                :disabled="isActive"
+                class="my-auto sendBtn"
+                color="#00E676"
+                plain
+                @click="post"
+                ><v-icon>mdi-send</v-icon></v-btn
+              >
+            </v-row>
+          </v-col>
         </v-card>
-      </v-col>
-    </v-row>
+        <v-row class="my-5">
+          <v-col v-for="(item, i) in comentarios" :key="i" md="6">
+            <v-card>
+              <v-list class="d-flex">
+                <v-card-text class="text-h5">
+                  Nota:
+                  <span class="green--text text--accent-3">{{
+                    item.nota
+                  }}</span>
+                </v-card-text>
+                <v-btn rounded plain class="pa-0" @click="deleteComment(i)">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+
+                <v-dialog v-model="dialog" width="500">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn rounded plain class="pa-0" v-bind="attrs" v-on="on">
+                      <v-icon>mdi-tooltip-edit</v-icon>
+                    </v-btn>
+                  </template>
+
+                  <v-card>
+                    <v-card-title class="text-h5 grey lighten-2">
+                      Edit Comment
+                    </v-card-title>
+
+                    <v-chip-group
+                      active-class=" white--text text--aceent-4"
+                      column
+                      class="chipGroups"
+                    >
+                      <v-chip
+                        color="#00E676"
+                        v-for="(i, index) in selectNota"
+                        :key="index"
+                        @click="btn(index, i.nota)"
+                        class="mx-auto pa-20"
+                      >
+                        {{ i.nota }}
+                      </v-chip>
+                    </v-chip-group>
+
+                    <v-text-field
+                      filled
+                      rounded
+                      dense
+                      class="newNota my-5 mx-auto"
+                      label="New Comment"
+                      id="id"
+                      v-model="newComment"
+                    ></v-text-field>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        @click="editComment(i)"
+                        color="primary"
+                        text
+                        :disabled="isActive"
+                      >
+                        <v-icon color="#00E676">mdi-send</v-icon>
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-list>
+              <v-card-text
+                class="text-h4 green--text text--accent-3 comentario"
+              >
+                {{ item.comentario }}
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -145,12 +159,14 @@ export default class Feedback extends Vue {
   private isActive = false;
   private newComment = "";
   private notaActive = false;
+  loading = true;
 
   created() {
     this.selectNota = this.notas;
+    this.setLoading();
   }
 
-  @Watch("comment") onComment() {
+  @Watch("comment, newComment") onComment() {
     if (this.comment.length >= 10) {
       this.isActive = false;
     } else {
@@ -163,6 +179,13 @@ export default class Feedback extends Vue {
     this.nota = nota;
     this.selectNota = this.notas;
     this.selectNota[id].select = true;
+  }
+
+  private setLoading(): void {
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 1000);
   }
 
   private post(): void {
@@ -252,15 +275,6 @@ h1 {
   border-radius: 50%;
 
   padding: 0;
-}
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 2s;
-}
-
-.v-enter,
-.v-leave-to {
-  opacity: 0;
 }
 
 .newNota {
